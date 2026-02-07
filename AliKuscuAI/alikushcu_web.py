@@ -17,20 +17,20 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Varsayılan (Karanlık Mod): Fotoğraf %80 Siyah Perdeyle Kapanır */
+    /* VARSAYILAN: Arka Plan Resmi Ayarı */
     .stApp {
-        background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
-                    url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/ekip_fotografi.jpg");
+        background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/ekip_fotografi.jpg");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
     }
     
-    /* Tarayıcı Aydınlık Moddaysa: Fotoğraf %85 Beyaz Perdeyle Kapanır */
+    /* Eğer tarayıcı Aydınlık (Light) moddaysa beyaz perde çek */
     @media (prefers-color-scheme: light) {
         .stApp {
-            background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), 
-                        url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/ekip_fotografi.jpg");
+            background-image: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), 
+                            url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/ekip_fotografi.jpg");
         }
     }
     </style>
@@ -106,3 +106,4 @@ with st.sidebar:
     if st.button("Yanımdan Ayrıl"):
         st.info("Ali Kuşçu galaksisine geri döndü. Tekrar görüşmek üzere!")
         st.stop()
+
