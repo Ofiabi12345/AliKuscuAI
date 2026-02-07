@@ -131,8 +131,9 @@ if prompt := st.chat_input("Mesajınızı buraya yazın..."):
             
         except Exception as e:
             if "429" in str(e):
-                st.warning("⚠️ Google limitlerine ulaşıldı. Lütfen 30 saniye bekleyip tekrar deneyin.")
+                st.warning("⚠️ Sakin ol şampiyon!30 saniye bekleyip tekrar dene lütfen.")
             elif "403" in str(e):
                 st.error("🚫 API Anahtarı sızdırılmış! Lütfen Secrets kısmından yeni bir anahtar tanımlayın.")
             else:
                 st.error(f"Bir hata oluştu: {e}")
+
