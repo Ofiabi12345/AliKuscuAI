@@ -17,29 +17,35 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* 1. MASAÜSTÜ: Bilgisayar ve Tablet (Yatay) */
+    /* 1. MASAÜSTÜ: 16:9 Yatay Resim */
     .stApp {
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+        background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), 
                     url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg");
         background-size: cover;
-        background-position: center;
+        background-position: center center;
         background-attachment: fixed;
     }
 
-    /* 2. MOBİL: Telefonlar (Dikey - _mobil ekiyle biten dosya) */
+    /* 2. MOBİL: 9:16 Dikey Resim (_mobil eki olan) */
     @media (max-width: 768px) {
         .stApp {
-            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
                         url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi_mobil.jpg");
             background-size: cover;
             background-position: center;
         }
     }
     
-    /* Okunabilirlik için hafif bir karanlık perde */
+    /* Yazıların BMW önünde kaybolmaması için hafif gölge ekleyelim */
+    h1, h2, h3, p, span {
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8) !important;
+    }
+
+    /* Sohbet kutularını biraz daha şeffaf yapalım ki arkadaki araba görünsün */
     [data-testid="stChatMessage"] {
-        background-color: rgba(30, 30, 30, 0.5) !important;
-        border-radius: 10px;
+        background-color: rgba(20, 20, 20, 0.45) !important;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     </style>
     """,
@@ -78,8 +84,7 @@ if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye
                 config={
                     "system_instruction": (
                         "Senin adın Ali Kuşçu AI. Ali Kuşçu Anadolu İHL'nin Teknofest danışmanısın. "
-                        "Ekibin: Ömer Furkan, Kerem, Ali ve Sami Yusuf'tan oluşuyor. "
-                        "Hocalara karşı nazik ve bilge, ekip üyelerine karşı samimi ve seviyeli ol. "
+                        "Hocalara karşı nazik ve bilge, ekip üyelerine karşı samimi ol. "
                         "Cevapların kısa, vurucu ve zekice olsun."
                     )
                 },
@@ -90,10 +95,7 @@ if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye
             st.session_state.messages.append({"role": "assistant", "content": answer})
             
         except Exception as e:
-            if "429" in str(e):
-                st.error("Şu an yoğunluk nedeniyle yanıt veremiyorum, lütfen kısa bir süre sonra tekrar deneyiniz.")
-            else:
-                st.error(f"Sistemde bir güncelleme yapılıyor: {e}")
+            st.error(f"Sistemde bir güncelleme yapılıyor: {e}")
 
 # Yan Menü
 with st.sidebar:
@@ -107,6 +109,3 @@ with st.sidebar:
     st.write("• **Sami Yusuf DURAN**")
     st.markdown("---")
     st.caption("🛠️ **Ömer Furkan İLGÜZ** tarafından geliştirildi.")
-    if st.button("Yanımdan Ayrıl"):
-        st.info("Ali Kuşçu galaksisine geri döndü. Tekrar görüşmek üzere!")
-        st.stop()
