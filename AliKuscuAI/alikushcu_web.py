@@ -70,11 +70,12 @@ with st.sidebar:
         st.image("ai_logo.png", use_container_width=True)
     st.markdown("---")
     st.subheader("🚀 Teknofest Ekibi")
-    st.write("• **Ömer Furkan**")
-    st.write("• **Kerem**")
-    st.write("• **Ali**")
-    st.write("• **Sami Yusuf**")
+    st.write("• **Ömer Furkan İLGÜZ**")
+    st.write("• **Kerem ÖZKAN**")
+    st.write("• **Ali ORHAN**")
+    st.write("• **Sami Yusuf DURAN**")
     st.write("• **Ali Kuşçu AİHL Teknoloji Tasarım Zümreleri**")
     st.markdown("---")
     if st.button("Sistemi Kapat"):
         st.stop()
+
