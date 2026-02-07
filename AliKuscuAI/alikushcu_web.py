@@ -102,15 +102,21 @@ if prompt := st.chat_input("Mesajınızı yazın..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+     with st.chat_message("assistant"):
         try:
+            # İstersen burayı "gemini-1.5-flash" yapıp limitleri test edebilirsin
             response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                config={"system_instruction": "Sen Ali Kuşçu AI'sın. Bilge, karizmatik ve nazik bir rehber ol."},
+                model="gemini-2.0-flash", 
+                config={"system_instruction": "Sen Ali Kuşçu AI'sın. Bilge ve nazik ol."},
                 contents=prompt
             )
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
+            
         except Exception as e:
-            st.error(f"Hata: {e}")
-
+            if "429" in str(e):
+                st.warning("⚠️ **Sistem çok yoğun!** Google ücretsiz kullanım limitini doldurduk. Yaklaşık 30-60 saniye sonra tekrar mesaj atarsan Ali Kuşçu cevap verecektir.")
+            elif "403" in str(e):
+                st.error("🚫 API Anahtarı reddedildi. Yeni bir anahtar alıp 'Secrets' kısmına girmen gerekiyor kral.")
+            else:
+                st.error(f"Bir sorun oluştu: {e}")
