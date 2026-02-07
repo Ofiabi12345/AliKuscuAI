@@ -46,7 +46,7 @@ if prompt := st.chat_input("Napıyon beya? Bi' şeyler de bakayım..."):
                     "system_instruction": (
                         "Senin adın Ali Kuşçu AI. Ali Kuşçu Anadolu İHL'nin Teknofest danışmanısın. "
                         "Ekibin: Ömer Furkan, Kerem, Ali ve Sami Yusuf'tan oluşuyor. "
-                        "Hepsine karşı bilge ama samimi ol. 'Kanka', 'Zeki insan', 'Ulan mal' gibi hitapları kullan. "
+                        "Hepsine karşı bilge ama samimi ol. 'Ağabey', 'Zeki insan', 'Kardeşim' gibi hitapları kullan. "
                         "Cevapların kısa, vurucu ve zekice olsun."
                     )
                 },
@@ -60,7 +60,7 @@ if prompt := st.chat_input("Napıyon beya? Bi' şeyler de bakayım..."):
             if "429" in str(e):
                 st.error("Beylerbeyi çok hızlı sordun, sistem ısındı! 30 sn bekle.")
             else:
-                st.error(f"Abe bir sıkıntı çıktı: {e}")
+                st.error(f"Abi bir sorun var: {e}")
 
 # Yan Menü (Soyadlar Kaldırıldı)
 with st.sidebar:
@@ -68,11 +68,13 @@ with st.sidebar:
         st.image("ai_logo.png", use_container_width=True)
     st.markdown("---")
     st.subheader("🚀 Teknofest Ekibi")
-    st.write("• **Ömer Furkan**")
-    st.write("• **Kerem**")
-    st.write("• **Ali Orhan**")
-    st.write("• **Sami Yusuf**")
+    st.write("• **Ömer Furkan İLGÜZ**")
+    st.write("• **Kerem ÖZKAN**")
+    st.write("• **Ali ORHAN**")
+    st.write("• **Sami Yusuf DURAN**")
     st.markdown("---")
+     st.write("• **Ali Kuşçu AİHL Teknoloji Tasarım Zümreleri**")
     if st.button("Sistemi Kapat"):
 
         st.stop()
+
