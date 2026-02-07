@@ -13,7 +13,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- DİNAMİK ARKA PLAN CSS (Klasör Yolu Güncellendi) ---
 st.markdown(
     """
     <style>
@@ -43,7 +42,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- ÜST BAŞLIK VE LOGO ---
 col1, col2 = st.columns([1, 4])
 with col1:
     if os.path.exists("ai_logo.png"):
@@ -54,7 +52,6 @@ with col2:
 
 st.divider()
 
-# --- SOHBET SİSTEMİ ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -62,7 +59,6 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Giriş kutucuğu
 if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye içinde hazır olur)"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -94,7 +90,6 @@ if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye
             else:
                 st.error(f"Sistemde bir güncelleme yapılıyor: {e}")
 
-# Yan Menü
 with st.sidebar:
     if os.path.exists("ai_logo.png"):
         st.image("ai_logo.png", use_container_width=True)
@@ -110,3 +105,4 @@ with st.sidebar:
     if st.button("Yanımdan Ayrıl"):
         st.info("Ali Kuşçu galaksisine geri döndü. Tekrar görüşmek üzere!")
         st.stop()
+
