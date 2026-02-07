@@ -1,67 +1,69 @@
 import streamlit as st
 from google import genai
 import os
-import base64
 
 # --- API AYARI ---
+# Secrets çalışmıyorsa direkt anahtarını buraya yapıştır
 try:
     API_KEY = st.secrets["GEMINI_API_KEY"]
 except:
-    API_KEY = "BURAYA_ANAHTARINI_YAZ" # Secrets yoksa buraya yaz
+    API_KEY = "BURAYA_API_KEY_YAPIŞTIR" 
 
 client = genai.Client(api_key=API_KEY)
 
 # --- SAYFA AYARLARI ---
-st.set_page_config(page_title="Ali Kuşçu AI 1.0", page_icon="ai_logo.png", layout="centered")
+st.set_page_config(
+    page_title="Ali Kuşçu AI 1.0", 
+    page_icon="ai_logo.png", 
+    layout="centered"
+)
 
-# --- RESMİ BASE64'E ÇEVİREN FONKSİYON (Siyah Ekranı Bitiren Hile) ---
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-# Eğer resim kodla aynı klasördeyse (GitHub'a beraber yüklediysen) bu çalışır
-try:
-    # Kendi dosya ismine göre burayı güncelle (Örn: ekip_fotografi.jpg)
-    bin_str = get_base64("ekip_fotografi.jpg") 
-    bg_image_style = f"url('data:image/jpg;base64,{bin_str}')"
-except:
-    # Eğer dosya bulunamazsa (hata vermesin diye) senin orijinal linki kullanır
-    bg_image_style = "url('https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg')"
-
-# --- CSS ---
-st.markdown(f"""
+# --- ARKA PLAN (EN BASİT CSS) ---
+# Not: Eğer bu linkler hala siyahsa, GitHub'da dosya isimlerini (büyük/küçük harf) kontrol et kral.
+st.markdown(
+    """
     <style>
-    .stApp {{
-        background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), {bg_image_style};
-        background-size: cover !important;
-        background-position: center !important;
-        background-attachment: fixed !important;
-    }}
-    [data-testid="stChatMessage"] {{
-        background-color: rgba(30, 30, 30, 0.7) !important;
-        border-radius: 15px;
-    }}
+    .stApp {
+        background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                          url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+
+    @media (max-width: 768px) {
+        .stApp {
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                              url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi_mobil.jpg");
+        }
+    }
+
+    /* Mesaj kutuları */
+    [data-testid="stChatMessage"] {
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
 # --- ANA EKRAN ---
 st.title("Ali Kuşçu AI 1.0")
-st.write("Teknofest 2026 | 4NDR0M3DY4")
-st.divider()
+st.write("Teknofest 2026 | Ali Kuşçu AİHL")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-if prompt := st.chat_input("Yaz bakalım..."):
+if prompt := st.chat_input("Mesajınızı yazın..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-    
+
     with st.chat_message("assistant"):
         try:
             response = client.models.generate_content(
@@ -76,11 +78,16 @@ if prompt := st.chat_input("Yaz bakalım..."):
 
 # --- YAN MENÜ ---
 with st.sidebar:
-    st.subheader("🚀 Ekip Üyeleri")
-    st.markdown("""
-    * **Ömer Furkan İLGÜZ**
-    * **Kerem ÖZKAN**
-    * **Ali ORHAN**
-    * **Sami Yusuf DURAN**
-    """)
-    st.caption("F5 atınca resmin gitmemesi için resim kodla aynı klasörde olmalıdır.")
+    # Logo dosyası varsa göster
+    if os.path.exists("ai_logo.png"):
+        st.image("ai_logo.png")
+    
+    st.markdown("---")
+    st.subheader("🚀 Teknofest Ekibi")
+    # İsimleri en düz şekilde yazıyoruz hata payı kalmasın
+    st.write("• Ömer Furkan İLGÜZ")
+    st.write("• Kerem ÖZKAN")
+    st.write("• Ali ORHAN")
+    st.write("• Sami Yusuf DURAN")
+    st.markdown("---")
+    st.caption("Geliştirici: Ömer Furkan")
