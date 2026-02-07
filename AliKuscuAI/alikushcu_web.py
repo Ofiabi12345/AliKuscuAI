@@ -78,7 +78,7 @@ with st.sidebar:
             st.rerun()
 
     st.markdown("---")
-    st.subheader("🚀 4NDR0M3DY4 Ekibi")
+    st.subheader("🚀 Teknofest Ekibi")
     st.write("• **Ömer Furkan**\n• **Kerem**\n• **Ali**\n• **Sami Yusuf**")
 
 # --- ANA SOHBET EKRANI ---
@@ -109,4 +109,5 @@ if prompt := st.chat_input("Mesajınızı yazın..."):
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
             st.error(f"Hata: {e}")
+
 
