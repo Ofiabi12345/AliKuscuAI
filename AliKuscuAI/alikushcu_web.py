@@ -3,7 +3,7 @@ from google import genai
 import os
 
 # API Ayarı
-API_KEY = "AIzaSyByvOF0dR9S2b3eWpWRcyPfR7kE3sNgSMo"
+API_KEY = "AIzaSyBGCjeBr52B8Ty8MruWZdKzkFvowfGjXXo"
 client = genai.Client(api_key=API_KEY)
 
 # --- SAYFA AYARLARI ---
@@ -113,3 +113,4 @@ if prompt := st.chat_input("Mesajınızı yazın..."):
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
             st.error(f"Hata: {e}")
+
