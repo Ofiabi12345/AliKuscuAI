@@ -13,6 +13,30 @@ client = genai.Client(api_key=API_KEY)
 # --- SAYFA AYARLARI ---
 st.set_page_config(page_title="Ali Kuşçu AI 1.0", page_icon="ai_logo.png", layout="centered")
 
+# --- ÖZEL YÜKLEME ANİMASYONU (CSS) ---
+st.markdown("""
+    <style>
+    @keyframes pulse {
+        0% { opacity: 0.5; transform: scale(0.95); }
+        50% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0.5; transform: scale(0.95); }
+    }
+    .custom-loader {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+    .loader-text {
+        color: #ff4b4b;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # --- ANA EKRAN ---
 st.title("Ali Kuşçu AI 1.0")
 st.write("Teknofest 2026 | Ali Kuşçu AİHL")
@@ -67,4 +91,5 @@ with st.sidebar:
     """)
     st.divider()
     st.caption("Teknofest 2026 Geliştirme Sürümü")
+
 
