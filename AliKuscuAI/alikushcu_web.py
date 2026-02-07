@@ -18,9 +18,8 @@ if "custom_bg" not in st.session_state:
     st.session_state.custom_bg = None
 
 # --- ARKA PLAN SEÇİCİ MANTIĞI ---
-# Eğer kullanıcı resim yüklemediyse senin GitHub'daki orijinal resimlerin kullanılır
 default_pc = "https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg"
-default_mobile = "https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi_mobil.jpg"
+default_mobile = "https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi_mobile.jpg"
 
 bg_url = st.session_state.custom_bg if st.session_state.custom_bg else default_pc
 mobile_bg_url = st.session_state.custom_bg if st.session_state.custom_bg else default_mobile
@@ -68,7 +67,6 @@ with st.sidebar:
     
     if uploaded_file:
         import base64
-        # Yüklenen resmi CSS'e uygun formata çeviriyoruz
         file_bytes = uploaded_file.read()
         encoded_image = base64.b64encode(file_bytes).decode()
         st.session_state.custom_bg = f"data:image/png;base64,{encoded_image}"
@@ -79,10 +77,13 @@ with st.sidebar:
 
     st.markdown("---")
     st.subheader("🚀 Teknofest Ekibi")
-    st.write("• **Ömer Furkan İLGÜZ**\
-    n• **Kerem ÖZKAN**\
-    n• **Ali ORHAN**
-    \n• **Sami Yusuf DURAN**")
+    # Hatalı olan kısım burasıydı, düzelttim:
+    st.markdown("""
+    * **Ömer Furkan İLGÜZ**
+    * **Kerem ÖZKAN**
+    * **Ali ORHAN**
+    * **Sami Yusuf DURAN**
+    """)
 
 # --- ANA SOHBET EKRANI ---
 st.title("Ali Kuşçu AI 1.0")
@@ -105,13 +106,10 @@ if prompt := st.chat_input("Mesajınızı yazın..."):
         try:
             response = client.models.generate_content(
                 model="gemini-2.0-flash",
-                config={"system_instruction": "Sen Ali Kuşçu AI'sın. Bilge ve nazik ol."},
+                config={"system_instruction": "Sen Ali Kuşçu AI'sın. Bilge, karizmatik ve nazik bir rehber ol."},
                 contents=prompt
             )
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
             st.error(f"Hata: {e}")
-
-
-
