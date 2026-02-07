@@ -70,8 +70,9 @@ with st.sidebar:
     st.subheader("🚀 Teknofest Ekibi")
     st.write("• **Ömer Furkan**")
     st.write("• **Kerem**")
-    st.write("• **Ali**")
+    st.write("• **Ali Orhan**")
     st.write("• **Sami Yusuf**")
     st.markdown("---")
     if st.button("Sistemi Kapat"):
+
         st.stop()
