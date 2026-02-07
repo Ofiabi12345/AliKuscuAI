@@ -83,7 +83,7 @@ with st.sidebar:
 
 # --- ANA SOHBET EKRANI ---
 st.title("Ali Kuşçu AI 1.0")
-st.write("Teknofest 2026 | Ali Kuşçu Anadolu İHL")
+st.write("Teknofest 2026 | Ali Kuşçu AİHL")
 st.divider()
 
 if "messages" not in st.session_state:
@@ -109,3 +109,4 @@ if prompt := st.chat_input("Mesajınızı yazın..."):
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
             st.error(f"Hata: {e}")
+
