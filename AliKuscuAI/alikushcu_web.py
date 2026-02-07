@@ -33,7 +33,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Giriş kutucuğu
-if prompt := st.chat_input("Napıyon beya? Bi' şeyler de bakayım..."):
+if prompt := st.chat_input("Bugün ne soracaksın arkadaşım, lütfen ne soracaksan site açıldıktan 30 saniye sonra sor"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -79,5 +79,6 @@ with st.sidebar:
     st.caption("🛠️ **Ömer Furkan İLGÜZ** tarafından geliştirildi.")
     if st.button("Sistemi Kapat"):
         st.stop()
+
 
 
