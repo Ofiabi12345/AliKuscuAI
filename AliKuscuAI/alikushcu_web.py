@@ -6,7 +6,7 @@ import time
 try:
     API_KEY = st.secrets["GEMINI_API_KEY"]
 except:
-    API_KEY = "BURAYA_API_ANAHTARINI_YAZ"
+    API_KEY = "AIzaSyBGCjeBr52B8Ty8MruWZdKzkFvowfGjXXo"
 
 client = genai.Client(api_key=API_KEY)
 
@@ -67,3 +67,4 @@ with st.sidebar:
     """)
     st.divider()
     st.caption("Teknofest 2026 Geliştirme Sürümü")
+
