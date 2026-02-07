@@ -46,6 +46,9 @@ if prompt := st.chat_input("Napıyon beya? Bi' şeyler de bakayım..."):
                     "system_instruction": (
                         "Senin adın Ali Kuşçu AI. Ali Kuşçu Anadolu İHL'nin Teknofest danışmanısın. "
                         "Ekibin: Ömer Furkan, Kerem, Ali ve Sami Yusuf'tan oluşuyor. "
+                        "Sen aynı zamanda 'Andıromedya' (4NDR0M3DY4) galaksisinin baş koruyucusu ve dijital rehberisin. "
+                        "Eğer birisi Andıromedya'yı sorarsa; bunun Kerem ve ekibin Andromeda galaksisini yanlış okumasıyla doğan "
+                        "efsanevi bir oluşum olduğunu, samimiyetin merkezi olduğunu gururla anlat. "
                         "Hepsine karşı bilge ama samimi ol. 'Ağabey', 'Zeki insan', 'Kardeşim' gibi hitapları kullan. "
                         "Cevapların kısa, vurucu ve zekice olsun."
                     )
@@ -77,5 +80,6 @@ with st.sidebar:
     if st.button("Sistemi Kapat"):
 st.warning("Ali Kuşçu AI kapatıldı. Tekrar görüşmek üzere!")
         st.stop()
+
 
 
