@@ -13,35 +13,40 @@ st.set_page_config(
     layout="centered"
 )
 
+# --- DUYARLI (RESPONSIVE) ARKA PLAN ---
 st.markdown(
     """
     <style>
-    /* Varsayılan: Karanlık Mod (Dark Mode) */
+    /* 1. MASAÜSTÜ: Bilgisayar ve Tablet (Yatay) */
     .stApp {
-        background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
                     url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
     }
-    
-    /* Tarayıcı Aydınlık Moddaysa (Light Mode) */
-    @media (prefers-color-scheme: light) {
+
+    /* 2. MOBİL: Telefonlar (Dikey - _mobil ekiyle biten dosya) */
+    @media (max-width: 768px) {
         .stApp {
-            background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), 
-                        url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg");
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
+                        url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi_mobil.jpg");
+            background-size: cover;
+            background-position: center;
         }
     }
     
-    /* Yazıların okunabilirliğini artırmak için input kutusu ayarı */
-    .stChatInputContainer {
-        padding-bottom: 20px;
+    /* Okunabilirlik için hafif bir karanlık perde */
+    [data-testid="stChatMessage"] {
+        background-color: rgba(30, 30, 30, 0.5) !important;
+        border-radius: 10px;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
+# --- ÜST BAŞLIK VE LOGO ---
 col1, col2 = st.columns([1, 4])
 with col1:
     if os.path.exists("ai_logo.png"):
@@ -52,6 +57,7 @@ with col2:
 
 st.divider()
 
+# --- SOHBET SİSTEMİ ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -59,6 +65,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+# Giriş kutucuğu
 if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye içinde hazır olur)"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -72,9 +79,7 @@ if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye
                     "system_instruction": (
                         "Senin adın Ali Kuşçu AI. Ali Kuşçu Anadolu İHL'nin Teknofest danışmanısın. "
                         "Ekibin: Ömer Furkan, Kerem, Ali ve Sami Yusuf'tan oluşuyor. "
-                        "Sen aynı zamanda 'Andıromedya' (4NDR0M3DY4) galaksisinin dijital rehberisin. "
-                        "Hocalara karşı son derece nazik ve bilge ol. "
-                        "Ekip üyelerine karşı samimi ama seviyeli ol. "
+                        "Hocalara karşı nazik ve bilge, ekip üyelerine karşı samimi ve seviyeli ol. "
                         "Cevapların kısa, vurucu ve zekice olsun."
                     )
                 },
@@ -90,6 +95,7 @@ if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye
             else:
                 st.error(f"Sistemde bir güncelleme yapılıyor: {e}")
 
+# Yan Menü
 with st.sidebar:
     if os.path.exists("ai_logo.png"):
         st.image("ai_logo.png", use_container_width=True)
@@ -99,10 +105,8 @@ with st.sidebar:
     st.write("• **Kerem ÖZKAN**")
     st.write("• **Ali ORHAN**")
     st.write("• **Sami Yusuf DURAN**")
-    st.write("• **Ali Kuşçu AİHL Teknoloji Tasarım Zümreleri**")
     st.markdown("---")
     st.caption("🛠️ **Ömer Furkan İLGÜZ** tarafından geliştirildi.")
     if st.button("Yanımdan Ayrıl"):
         st.info("Ali Kuşçu galaksisine geri döndü. Tekrar görüşmek üzere!")
         st.stop()
-
