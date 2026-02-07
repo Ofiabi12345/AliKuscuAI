@@ -75,6 +75,7 @@ with st.sidebar:
     st.markdown("---")
      st.write("• **Ali Kuşçu AİHL Teknoloji Tasarım Zümreleri**")
     if st.button("Sistemi Kapat"):
-
+st.warning("Ali Kuşçu AI kapatıldı. Tekrar görüşmek üzere!")
         st.stop()
+
 
