@@ -13,57 +13,79 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- DUYARLI (RESPONSIVE) ARKA PLAN ---
-st.markdown(
-    """
-    <style>
-    /* 1. MASAÜSTÜ: 16:9 Yatay Resim */
-    .stApp {
-        background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), 
-                    url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg");
-        background-size: cover;
-        background-position: center center;
-        background-attachment: fixed;
-    }
+# --- OTURUM HAFIZASI (Özel Arka Plan İçin) ---
+if "custom_bg" not in st.session_state:
+    st.session_state.custom_bg = None
 
-    /* 2. MOBİL: 9:16 Dikey Resim (_mobil eki olan) */
-    @media (max-width: 768px) {
-        .stApp {
+# --- ARKA PLAN SEÇİCİ MANTIĞI ---
+# Eğer kullanıcı resim yüklemediyse senin GitHub'daki orijinal resimlerin kullanılır
+default_pc = "https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg"
+default_mobile = "https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi_mobil.jpg"
+
+bg_url = st.session_state.custom_bg if st.session_state.custom_bg else default_pc
+mobile_bg_url = st.session_state.custom_bg if st.session_state.custom_bg else default_mobile
+
+# --- DİNAMİK ARKA PLAN CSS ---
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), 
+                    url("{bg_url}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        image-rendering: -webkit-optimize-contrast;
+    }}
+
+    @media (max-width: 768px) {{
+        .stApp {{
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi_mobil.jpg");
+                        url("{mobile_bg_url}");
             background-size: cover;
             background-position: center;
-        }
-    }
+        }}
+    }}
     
-    /* Yazıların BMW önünde kaybolmaması için hafif gölge ekleyelim */
-    h1, h2, h3, p, span {
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.8) !important;
-    }
-
-    /* Sohbet kutularını biraz daha şeffaf yapalım ki arkadaki araba görünsün */
-    [data-testid="stChatMessage"] {
-        background-color: rgba(20, 20, 20, 0.45) !important;
-        border-radius: 12px;
+    [data-testid="stChatMessage"] {{
+        background-color: rgba(15, 15, 15, 0.6) !important;
+        backdrop-filter: blur(8px);
+        border-radius: 15px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+    }}
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# --- ÜST BAŞLIK VE LOGO ---
-col1, col2 = st.columns([1, 4])
-with col1:
+# --- YAN MENÜ (MODİFİYE PANELİ) ---
+with st.sidebar:
     if os.path.exists("ai_logo.png"):
-        st.image("ai_logo.png", width=90)
-with col2:
-    st.title("Ali Kuşçu AI 1.0")
-    st.write("Teknofest 2026 | Ali Kuşçu Anadolu İHL Ekibi")
+        st.image("ai_logo.png", use_container_width=True)
+    
+    st.markdown("### 🎨 Görünümü Özelleştir")
+    uploaded_file = st.file_uploader("Kendi arka planını yükle", type=["jpg", "jpeg", "png"])
+    
+    if uploaded_file:
+        import base64
+        # Yüklenen resmi CSS'e uygun formata çeviriyoruz
+        file_bytes = uploaded_file.read()
+        encoded_image = base64.b64encode(file_bytes).decode()
+        st.session_state.custom_bg = f"data:image/png;base64,{encoded_image}"
+        st.success("Yeni tema uygulandı!")
+        if st.button("Orijinale Dön"):
+            st.session_state.custom_bg = None
+            st.rerun()
 
+    st.markdown("---")
+    st.subheader("🚀 4NDR0M3DY4 Ekibi")
+    st.write("• **Ömer Furkan**\n• **Kerem**\n• **Ali**\n• **Sami Yusuf**")
+
+# --- ANA SOHBET EKRANI ---
+st.title("Ali Kuşçu AI 1.0")
+st.write("Teknofest 2026 | Ali Kuşçu Anadolu İHL")
 st.divider()
 
-# --- SOHBET SİSTEMİ ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -71,8 +93,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Giriş kutucuğu
-if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye içinde hazır olur)"):
+if prompt := st.chat_input("Mesajınızı yazın..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -81,31 +102,10 @@ if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistem 30 saniye
         try:
             response = client.models.generate_content(
                 model="gemini-2.0-flash",
-                config={
-                    "system_instruction": (
-                        "Senin adın Ali Kuşçu AI. Ali Kuşçu Anadolu İHL'nin Teknofest danışmanısın. "
-                        "Hocalara karşı nazik ve bilge, ekip üyelerine karşı samimi ol. "
-                        "Cevapların kısa, vurucu ve zekice olsun."
-                    )
-                },
+                config={"system_instruction": "Sen Ali Kuşçu AI'sın. Bilge ve nazik ol."},
                 contents=prompt
             )
-            answer = response.text
-            st.markdown(answer)
-            st.session_state.messages.append({"role": "assistant", "content": answer})
-            
+            st.markdown(response.text)
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
-            st.error(f"Sistemde bir güncelleme yapılıyor: {e}")
-
-# Yan Menü
-with st.sidebar:
-    if os.path.exists("ai_logo.png"):
-        st.image("ai_logo.png", use_container_width=True)
-    st.markdown("---")
-    st.subheader("🚀 4NDR0M3DY4 Ekibi")
-    st.write("• **Ömer Furkan İLGÜZ**")
-    st.write("• **Kerem ÖZKAN**")
-    st.write("• **Ali ORHAN**")
-    st.write("• **Sami Yusuf DURAN**")
-    st.markdown("---")
-    st.caption("🛠️ **Ömer Furkan İLGÜZ** tarafından geliştirildi.")
+            st.error(f"Hata: {e}")
