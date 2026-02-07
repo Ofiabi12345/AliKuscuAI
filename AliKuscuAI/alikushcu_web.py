@@ -13,6 +13,31 @@ st.set_page_config(
     layout="centered"
 )
 
+# --- DİNAMİK ARKA PLAN CSS (Karanlık/Aydınlık Mod Uyumu) ---
+st.markdown(
+    """
+    <style>
+    /* Varsayılan (Karanlık Mod): Fotoğraf %80 Siyah Perdeyle Kapanır */
+    .stApp {
+        background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                    url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/ekip_fotografi.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    
+    /* Tarayıcı Aydınlık Moddaysa: Fotoğraf %85 Beyaz Perdeyle Kapanır */
+    @media (prefers-color-scheme: light) {
+        .stApp {
+            background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), 
+                        url("https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/ekip_fotografi.jpg");
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # --- ÜST BAŞLIK VE LOGO ---
 col1, col2 = st.columns([1, 4])
 with col1:
@@ -32,8 +57,8 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Giriş kutucuğu
-if prompt := st.chat_input("Bugün ne soracaksın arkadaşım, lütfen ne soracaksan site açıldıktan 30 saniye sonra sor"):
+# Giriş kutucuğu - Hocalar için biraz daha kibar hale getirildi
+if prompt := st.chat_input("Size nasıl yardımcı olabilirim? (Sistemimiz 30 saniye içinde hazır olacaktır)"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -47,9 +72,10 @@ if prompt := st.chat_input("Bugün ne soracaksın arkadaşım, lütfen ne soraca
                         "Senin adın Ali Kuşçu AI. Ali Kuşçu Anadolu İHL'nin Teknofest danışmanısın. "
                         "Ekibin: Ömer Furkan, Kerem, Ali ve Sami Yusuf'tan oluşuyor. "
                         "Sen aynı zamanda 'Andıromedya' (4NDR0M3DY4) galaksisinin dijital rehberisin. "
-                        "Bu isim Kerem ve ekibin Andromeda'yı yanlış okumasıyla doğan samimi bir oluşumdur. "
-                        "Hepsine karşı bilge ama samimi ol. 'Ağabey', 'Zeki insan', 'Kardeşim' gibi hitapları kullan. "
-                        "Cevapların kısa ve zekice olsun."
+                        "Bu isim ekibin Andromeda'yı samimi bir şekilde yanlış okumasıyla doğmuştur. "
+                        "Hocalara karşı son derece nazik ve bilge ol. "
+                        "Ekip üyelerine karşı ise bir ağabey gibi samimi ama seviyeli ol. "
+                        "Cevapların kısa, vurucu ve zekice olsun."
                     )
                 },
                 contents=prompt
@@ -60,16 +86,16 @@ if prompt := st.chat_input("Bugün ne soracaksın arkadaşım, lütfen ne soraca
             
         except Exception as e:
             if "429" in str(e):
-                st.error("Beylerbeyi çok hızlı sordun, sistem ısındı! 30 sn bekle.")
+                st.error("Şu an yoğunluk nedeniyle yanıt veremiyorum, lütfen kısa bir süre sonra tekrar deneyiniz.")
             else:
-                st.error(f"Abi bir sorun var: {e}")
+                st.error(f"Sistemde bir güncelleme yapılıyor: {e}")
 
 # Yan Menü
 with st.sidebar:
     if os.path.exists("ai_logo.png"):
         st.image("ai_logo.png", use_container_width=True)
     st.markdown("---")
-    st.subheader("🚀 Teknofest Ekibi")
+    st.subheader("🚀 4NDR0M3DY4 Ekibi")
     st.write("• **Ömer Furkan İLGÜZ**")
     st.write("• **Kerem ÖZKAN**")
     st.write("• **Ali ORHAN**")
@@ -78,8 +104,5 @@ with st.sidebar:
     st.markdown("---")
     st.caption("🛠️ **Ömer Furkan İLGÜZ** tarafından geliştirildi.")
     if st.button("Yanımdan Ayrıl"):
+        st.info("Ali Kuşçu galaksisine geri döndü. Tekrar görüşmek üzere!")
         st.stop()
-
-
-
-
