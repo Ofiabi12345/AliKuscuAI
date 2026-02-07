@@ -46,11 +46,10 @@ if prompt := st.chat_input("Napıyon beya? Bi' şeyler de bakayım..."):
                     "system_instruction": (
                         "Senin adın Ali Kuşçu AI. Ali Kuşçu Anadolu İHL'nin Teknofest danışmanısın. "
                         "Ekibin: Ömer Furkan, Kerem, Ali ve Sami Yusuf'tan oluşuyor. "
-                        "Sen aynı zamanda 'Andıromedya' (4NDR0M3DY4) galaksisinin baş koruyucusu ve dijital rehberisin. "
-                        "Eğer birisi Andıromedya'yı sorarsa; bunun Kerem ve ekibin Andromeda galaksisini yanlış okumasıyla doğan "
-                        "efsanevi bir oluşum olduğunu, samimiyetin merkezi olduğunu gururla anlat. "
+                        "Sen aynı zamanda 'Andıromedya' (4NDR0M3DY4) galaksisinin dijital rehberisin. "
+                        "Bu isim Kerem ve ekibin Andromeda'yı yanlış okumasıyla doğan samimi bir oluşumdur. "
                         "Hepsine karşı bilge ama samimi ol. 'Ağabey', 'Zeki insan', 'Kardeşim' gibi hitapları kullan. "
-                        "Cevapların kısa, vurucu ve zekice olsun."
+                        "Cevapların kısa ve zekice olsun."
                     )
                 },
                 contents=prompt
@@ -65,21 +64,17 @@ if prompt := st.chat_input("Napıyon beya? Bi' şeyler de bakayım..."):
             else:
                 st.error(f"Abi bir sorun var: {e}")
 
-# Yan Menü (Soyadlar Kaldırıldı)
+# Yan Menü
 with st.sidebar:
     if os.path.exists("ai_logo.png"):
         st.image("ai_logo.png", use_container_width=True)
     st.markdown("---")
     st.subheader("🚀 Teknofest Ekibi")
-    st.write("• **Ömer Furkan İLGÜZ**")
-    st.write("• **Kerem ÖZKAN**")
-    st.write("• **Ali ORHAN**")
-    st.write("• **Sami Yusuf DURAN**")
+    st.write("• **Ömer Furkan**")
+    st.write("• **Kerem**")
+    st.write("• **Ali**")
+    st.write("• **Sami Yusuf**")
+    st.write("• **Ali Kuşçu AİHL Teknoloji Tasarım Zümreleri**")
     st.markdown("---")
-     st.write("• **Ali Kuşçu AİHL Teknoloji Tasarım Zümreleri**")
     if st.button("Sistemi Kapat"):
-st.warning("Ali Kuşçu AI kapatıldı. Tekrar görüşmek üzere!")
         st.stop()
-
-
-
