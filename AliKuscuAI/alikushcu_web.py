@@ -3,13 +3,13 @@ from google import genai
 import os
 import base64
 
-# --- API AYARI ---
+# --- API AYARI (Secrets Üzerinden) ---
 try:
     API_KEY = st.secrets["GEMINI_API_KEY"]
     client = genai.Client(api_key=API_KEY)
-except:
-    # Eğer secrets yoksa hata vermesin, sadece bot çalışmaz
-    API_KEY = "YOK"
+except Exception:
+    # Test için anahtar yoksa uyarı ver ama site çökmesin
+    API_KEY = None
 
 # --- SAYFA AYARLARI ---
 st.set_page_config(
@@ -18,87 +18,92 @@ st.set_page_config(
     layout="centered"
 )
 
-if "custom_bg" not in st.session_state:
-    st.session_state.custom_bg = None
-
-# --- ARKA PLAN LİNKLERİ ---
-# Buradaki linkleri tarayıcıda açtığında resmi gördüğünden emin ol kral
+# --- ARKA PLAN LİNKLERİ (RAW FORMAT) ---
+# GitHub linklerinde 'blob' yerine 'raw' kullandığından emin olmalısın.
 default_pc = "https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi.jpg"
 default_mobile = "https://raw.githubusercontent.com/Ofiabi12345/AliKuscuAI/main/AliKuscuAI/ekip_fotografi_mobil.jpg"
 
-# Hangi resmi kullanacağımızı seçiyoruz
-main_bg = st.session_state.custom_bg if st.session_state.custom_bg else default_pc
+if "custom_bg" not in st.session_state:
+    st.session_state.custom_bg = None
+
+# Hangi resim görünecek?
+bg_image = st.session_state.custom_bg if st.session_state.custom_bg else default_pc
 mobile_bg = st.session_state.custom_bg if st.session_state.custom_bg else default_mobile
 
-# --- CSS (GARANTİ YÖNTEM) ---
+# --- CSS (Siyah ekranı bitiren versiyon) ---
 st.markdown(f"""
     <style>
     .stApp {{
-        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("{main_bg}");
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("{bg_image}");
         background-size: cover !important;
         background-position: center !important;
-        background-repeat: no-repeat !important;
         background-attachment: fixed !important;
     }}
 
     @media (max-width: 768px) {{
         .stApp {{
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("{mobile_bg}");
+            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url("{mobile_bg}");
             background-size: cover !important;
             background-position: center !important;
         }}
     }}
 
-    /* Sohbet Balonları Görünürlüğü */
+    /* Mesaj kutularını daha belirgin yapalım */
     [data-testid="stChatMessage"] {{
-        background-color: rgba(30, 30, 30, 0.7) !important;
-        backdrop-filter: blur(5px);
+        background-color: rgba(25, 25, 25, 0.75) !important;
+        backdrop-filter: blur(10px);
         border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }}
     </style>
     """, unsafe_allow_html=True)
 
 # --- YAN MENÜ ---
 with st.sidebar:
-    st.title("🎨 Modifiye")
-    uploaded_file = st.file_uploader("Arka planı değiştir", type=["jpg", "png", "jpeg"])
-    if uploaded_file:
-        encoded = base64.b64encode(uploaded_file.read()).decode()
-        st.session_state.custom_bg = f"data:image/png;base64,{encoded}"
-        st.rerun()
+    st.markdown("### 🎨 Görünümü Özelleştir")
+    uploaded_file = st.file_uploader("Kendi arka planını yükle", type=["jpg", "jpeg", "png"])
     
+    if uploaded_file:
+        encoded_image = base64.b64encode(uploaded_file.read()).decode()
+        st.session_state.custom_bg = f"data:image/png;base64,{encoded_image}"
+        st.rerun()
+
     if st.button("Orijinale Dön"):
         st.session_state.custom_bg = None
         st.rerun()
 
-    st.divider()
+    st.markdown("---")
     st.subheader("🚀 Teknofest Ekibi")
-    st.write("• Ömer Furkan İLGÜZ\n• Kerem ÖZKAN\n• Ali ORHAN\n• Sami Yusuf DURAN")
+    st.markdown("* **Ömer Furkan İLGÜZ**\n* **Kerem ÖZKAN**\n* **Ali ORHAN**\n* **Sami Yusuf DURAN**")
 
 # --- ANA EKRAN ---
 st.title("Ali Kuşçu AI 1.0")
-st.write("Teknofest 2026 | 4NDR0M3DY4")
+st.write("Teknofest 2026 | Ali Kuşçu AİHL")
+st.divider()
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-if prompt := st.chat_input("Yaz bakalım..."):
+if prompt := st.chat_input("Mesajınızı yazın..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-    
-    # Bot cevabı (Basitleştirilmiş deneme)
+
     with st.chat_message("assistant"):
-        if API_KEY != "YOK":
+        if API_KEY:
             try:
-                response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+                response = client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    config={"system_instruction": "Sen Ali Kuşçu AI'sın. Bilge, nazik ve kısa cevaplar ver."},
+                    contents=prompt
+                )
                 st.markdown(response.text)
                 st.session_state.messages.append({"role": "assistant", "content": response.text})
-            except:
-                st.error("Limit doldu veya bir hata oluştu.")
+            except Exception as e:
+                st.error(f"Hata: {e}")
         else:
-            st.info("Ali Kuşçu şu an çevrimdışı (API Key yok).")
+            st.info("Ali Kuşçu şu an çevrimdışı (Secrets ayarını kontrol et!).")
