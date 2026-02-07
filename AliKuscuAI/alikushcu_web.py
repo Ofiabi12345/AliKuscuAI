@@ -7,7 +7,7 @@ import base64
 try:
     API_KEY = st.secrets["GEMINI_API_KEY"]
 except:
-    API_KEY = "BURAYA_API_ANAHTARINI_YAZ"
+    API_KEY = "AIzaSyBGCjeBr52B8Ty8MruWZdKzkFvowfGjXXo"
 
 client = genai.Client(api_key=API_KEY)
 
@@ -89,3 +89,4 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("🚀 Ekip Üyeleri")
     st.write("• Ömer Furkan İLGÜZ\n• Kerem ÖZKAN\n• Ali ORHAN\n• Sami Yusuf DURAN")
+
