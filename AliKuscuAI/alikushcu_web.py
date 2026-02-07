@@ -76,6 +76,8 @@ with st.sidebar:
     st.write("• **Sami Yusuf DURAN**")
     st.write("• **Ali Kuşçu AİHL Teknoloji Tasarım Zümreleri**")
     st.markdown("---")
+    st.caption("🛠️ **Ömer Furkan İLGÜZ** tarafından geliştirildi.")
     if st.button("Sistemi Kapat"):
         st.stop()
+
 
