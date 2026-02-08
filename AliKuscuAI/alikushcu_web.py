@@ -1,63 +1,54 @@
 import streamlit as st
+from google import genai
 import requests
 import time
 
-# --- API AYARI ---
-HF_TOKEN = "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"
-API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.3"
-headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+# --- API ANAHTARLARI (Güvenli şekilde çekiyoruz) ---
+GEMINI_KEY = st.secrets.get("GEMINI_API_KEY", "BURAYA_GEMINI_KEY")
+HF_TOKEN = st.secrets.get("HF_TOKEN", "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")
 
 # --- SAYFA AYARLARI ---
-st.set_page_config(page_title="Ali Kuşçu AI 1.0", page_icon="ai_logo.png")
-
+st.set_page_config(page_title="Ali Kuşçu AI 1.0", page_icon="🚀")
 st.title("Ali Kuşçu AI 1.0")
-st.write("Teknofest 2026 | Sınırsız Mod")
+st.caption("Teknofest 2026 | Hibrit Motor Teknolojisi 🛡️")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Mesajları Görüntüle
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Kullanıcı Girişi
-if prompt := st.chat_input("Ali Kuşçu'ya sor..."):
+if prompt := st.chat_input("Ali Kuşçu her zaman burada..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
+        response_text = ""
+        success = False
+
+        # --- 1. DENEME: GEMINI (Ana Motor) ---
         try:
-            with st.spinner("Düşünüyorum..."):
-                formatted_prompt = f"<s>[INST] Sen Ali Kuşçu AI'sın. Kısa cevap ver. Soru: {prompt} [/INST]"
-                payload = {"inputs": formatted_prompt, "parameters": {"max_new_tokens": 500, "return_full_text": False}}
+            client = genai.Client(api_key=GEMINI_KEY)
+            res = client.models.generate_content(model="gemini-1.5-flash", contents=prompt)
+            response_text = res.text
+            success = True
+        except Exception:
+            # --- 2. DENEME: HUGGING FACE (Yedek Motor) ---
+            try:
+                API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.3"
+                headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+                payload = {"inputs": f"<s>[INST] Ali Kuşçu olarak kısa cevap ver: {prompt} [/INST]", "parameters": {"max_new_tokens": 200}}
+                res_hf = requests.post(API_URL, headers=headers, json=payload)
                 
-                response = requests.post(API_URL, headers=headers, json=payload)
-                
-                # Model uyanıyorsa 503 verir, bekleyelim
-                if response.status_code == 503:
-                    st.warning("⌛ Ali Kuşçu kütüphanesini açıyor, 10 saniye bekle kral...")
-                    time.sleep(10)
-                    response = requests.post(API_URL, headers=headers, json=payload)
-
-                output = response.json()
-                
-                # Yanıtın içindeki metni güvenli bir şekilde çekelim
-                if isinstance(output, list) and len(output) > 0:
-                    res_text = output[0].get('generated_text', "Cevap üretilemedi.")
-                elif isinstance(output, dict) and 'generated_text' in output:
-                    res_text = output['generated_text']
+                if res_hf.status_code == 200:
+                    response_text = res_hf.json()[0]['generated_text']
+                    success = True
                 else:
-                    res_text = "Şu an cevap veremiyorum, lütfen tekrar dene."
+                    response_text = "Şu an tüm motorlar sıcak, 10 saniye mola kral!"
+            except:
+                response_text = "Bağlantı koptu, tekrar dener misin?"
 
-                st.markdown(res_text)
-                st.session_state.messages.append({"role": "assistant", "content": res_text})
-
-        except Exception as e:
-            st.error(f"Sistemde küçük bir sorun var: {e}")
-
-# --- YAN MENÜ ---
-with st.sidebar:
-    st.subheader("🚀 4NDR0M3DY4 Ekibi")
-    st.write("• Ömer Furkan İLGÜZ\n• Kerem ÖZKAN\n• Ali ORHAN\n• Sami Yusuf DURAN")
+        st.markdown(response_text)
+        st.session_state.messages.append({"role": "assistant", "content": response_text})
