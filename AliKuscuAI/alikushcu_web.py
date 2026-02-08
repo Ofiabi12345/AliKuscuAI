@@ -35,20 +35,38 @@ if prompt := st.chat_input("Ali Kuşçu her zaman burada..."):
             response_text = res.text
             success = True
         except Exception:
-            # --- 2. DENEME: HUGGING FACE (Yedek Motor) ---
-            try:
-                API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.3"
-                headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-                payload = {"inputs": f"<s>[INST] Ali Kuşçu olarak kısa cevap ver: {prompt} [/INST]", "parameters": {"max_new_tokens": 200}}
-                res_hf = requests.post(API_URL, headers=headers, json=payload)
-                
-                if res_hf.status_code == 200:
-                    response_text = res_hf.json()[0]['generated_text']
-                    success = True
-                else:
-                    response_text = "Şu an tüm motorlar sıcak, 10 saniye mola kral!"
+           try:
+                with st.spinner("Yedek kütüphaneler taranıyor..."):
+                    API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.3"
+                    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+                    payload = {
+                        "inputs": f"<s>[INST] Sen Ali Kuşçu AI'sın. Kısa cevap ver: {prompt} [/INST]",
+                        "parameters": {"max_new_tokens": 250}
+                    }
+                    res_hf = requests.post(API_URL, headers=headers, json=payload)
+                    if res_hf.status_code == 200:
+                        full_response = res_hf.json()[0]['generated_text']
+                    else:
+                        full_response = "Şu an tüm motorlar yoğun, 10 saniye mola kral! 🏁"
             except:
-                response_text = "Bağlantı koptu, tekrar dener misin?"
+                full_response = "Sistem kilitlendi. API anahtarlarını kontrol etmelisin."
 
-        st.markdown(response_text)
-        st.session_state.messages.append({"role": "assistant", "content": response_text})
+        st.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+# --- YAN MENÜ (EKİP İSİMLERİ BURADA) ---
+with st.sidebar:
+    st.image("https://www.teknofest.org/assets/img/logo.png", width=200) # Teknofest Logosu
+    st.subheader("🚀 4NDR0M3DY4 Ekibi")
+    st.markdown("""
+    * **Ömer Furkan İLGÜZ**
+    * **Kerem ÖZKAN**
+    * **Ali ORHAN**
+    * **Sami Yusuf DURAN**
+    """)
+    st.divider()
+    st.info("Ali Kuşçu AI, Teknofest 2026 için özel olarak geliştirilmiştir.")
+    
+    if st.button("Sohbeti Temizle"):
+        st.session_state.messages = []
+        st.rerun()
