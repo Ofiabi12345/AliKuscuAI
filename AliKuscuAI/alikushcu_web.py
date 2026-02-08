@@ -62,9 +62,9 @@ if prompt := st.chat_input("Ali Kuşçu'ya sor..."):
                     if res_hf.status_code == 200:
                         full_response = res_hf.json()[0]['generated_text']
                     else:
-                        full_response = "Şu an tüm motorlar yoğun, 10 saniye mola kral! 🏁"
+                        full_response = "Çok ısındım biraz mola reis. 🏁"
             except:
-                full_response = "Sistem kilitlendi. API anahtarlarını kontrol etmelisin."
+                full_response = "Sistem kilitlendi. API anahtarlarını bir kontrol et gel bunu sen yapma Ömer Furkan İLGÜZ'e  ekran görüntüsünü yolla sen yapamazsın."
 
         st.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
@@ -72,7 +72,7 @@ if prompt := st.chat_input("Ali Kuşçu'ya sor..."):
 # --- YAN MENÜ ---
 with st.sidebar:
     st.image("https://www.teknofest.org/assets/img/logo.png", width=200)
-    st.subheader("🚀 4NDR0M3DY4 Ekibi")
+    st.subheader("🚀 Teknofest Ekibi")
     st.markdown("""
     * **Ömer Furkan İLGÜZ**
     * **Kerem ÖZKAN**
@@ -86,4 +86,5 @@ with st.sidebar:
     if st.button("Sohbeti Temizle"):
         st.session_state.messages = []
         st.rerun()
+
 
