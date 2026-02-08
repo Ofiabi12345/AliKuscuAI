@@ -18,7 +18,7 @@ st.set_page_config(page_title="Ali Kuşçu AI 1.0", page_icon="🚀", layout="ce
 
 # --- ANA EKRAN ---
 st.title("🚀 Ali Kuşçu AI 1.0")
-st.write("Teknofest 2026 | 4NDR0M3DY4 Takımı")
+st.write("Teknofest 2026 | Ali Kuşçu İHO Takımı")
 st.divider()
 
 if "messages" not in st.session_state:
@@ -40,11 +40,11 @@ if prompt := st.chat_input("Ali Kuşçu'ya sor..."):
         
         # 1. DENEME: GEMINI
         try:
-            with st.spinner("Ali Kuşçu düşünüyor..."):
+            with st.spinner("Bizimki yine düşünmekte..."):
                 client = genai.Client(api_key=GEMINI_KEY)
                 res = client.models.generate_content(
                     model="gemini-1.5-flash",
-                    config={"system_instruction": "Sen Ali Kuşçu AI'sın. Bilge ve nazik ol."},
+                    config={"system_instruction": "Sen Ali Kuşçu AI'sın. Bilge ve samimi ol. Zeki insan, Reis gibi kelimeler kullan."},
                     contents=prompt
                 )
                 full_response = res.text
@@ -78,8 +78,12 @@ with st.sidebar:
     * **Kerem ÖZKAN**
     * **Ali ORHAN**
     * **Sami Yusuf DURAN**
+    * **Ali Kuşçu anadolu İmam Hatip Lisesi Teknoloji Tasarım Zümreleri**
+
+    * **Ömer Furkan İLGÜZ tarafından geliştirildi**
     """)
     st.divider()
     if st.button("Sohbeti Temizle"):
         st.session_state.messages = []
         st.rerun()
+
